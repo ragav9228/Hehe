@@ -129,6 +129,8 @@ class TgUploader:
         return True
 
     async def _prepare_file(self, file_, dirpath, delete_file):
+        if file_.startswith('www'):
+            file_ = ' '.join(file_.split()[1:])
         if self._lprefix:
             cap_mono = f"{self._lprefix} <code>{file_}</code>"
             self._lprefix = re_sub(r'www\S+', '', self._lprefix)
