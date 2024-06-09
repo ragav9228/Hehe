@@ -143,7 +143,9 @@ class TgUploader:
                 new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
                 self._up_path = await copy(self._up_path, new_path)
             else:
-                new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
+            if file_.startswith('www'):
+                file_ = ' '.join(file_.split()[1:])
+                new_path = ospath.join(dirpath, file_)
                 await rename(self._up_path, new_path)
                 self._up_path = new_path
         else:
