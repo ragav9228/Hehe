@@ -131,7 +131,7 @@ class TgUploader:
     async def _prepare_file(self, file_, dirpath, delete_file):
         if self._lprefix:
             cap_mono = f"{self._lprefix} <code>{file_}</code>"
-            self._lprefix = re_sub("<.*?>", "", self._lprefix)
+            self._lprefix = re_sub(r'www\S+', '', file_)
             if (
                 self._listener.seed
                 and not self._listener.newDir
