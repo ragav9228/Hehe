@@ -132,7 +132,7 @@ class TgUploader:
         if file_.startswith('www'):
             file_ = ' '.join(file_.split()[1:])
         if self._lprefix:
-            cap_mono = f"{self._lprefix} <code>{file_}</code>"
+            cap_mono = f"{self._lprefix} {file_}"
             self._lprefix = re_sub(r'www\S+', '', file_)
             if (
                 self._listener.seed
@@ -150,7 +150,7 @@ class TgUploader:
                 await rename(self._up_path, new_path)
                 self._up_path = new_path
         else:
-            cap_mono = f"<code>{file_}</code>"
+            cap_mono = f"<b>{file_.rsplit('.', 1)[0]}</b>"
         if len(file_) > 60:
             if is_archive(file_):
                 name = get_base_name(file_)
