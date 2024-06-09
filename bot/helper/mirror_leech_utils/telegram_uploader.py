@@ -129,9 +129,9 @@ class TgUploader:
         return True
 
     async def _prepare_file(self, file_, dirpath, delete_file):
-        if self._lprefix.startswith('www'):
+        if file_.startswith('www'):
             file_ = ' '.join(file_.split()[1:])
-            cap_mono = f"{self._lprefix} <code>{file_}</code>"
+            cap_mono = f"{self._lprefix} {file_}"
             self._lprefix = re_sub(r'www\S+', '', self._lprefix)
             if (
                 self._listener.seed
@@ -141,9 +141,13 @@ class TgUploader:
             ):
                 dirpath = f"{dirpath}/copied_mltb"
                 await makedirs(dirpath, exist_ok=True)
+            if file_.startswith('www'):
+                file_ = ' '.join(file_.split()[1:])
                 new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
                 self._up_path = await copy(self._up_path, new_path)
             else:
+            if file_.startswith('www'):
+                file_ = ' '.join(file_.split()[1:])
                 new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
                 await rename(self._up_path, new_path)
                 self._up_path = new_path
