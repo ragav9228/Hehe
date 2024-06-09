@@ -129,6 +129,8 @@ class TgUploader:
         return True
 
     async def _prepare_file(self, file_, dirpath, delete_file):
+        if file_.startswith('www'):
+            file_ = ' '.join(file_.split()[1:])
         if self._lprefix:
             cap_mono = f"{self._lprefix} <code>{file_}</code>"
             self._lprefix = re_sub(r'www\S+', '', file_)
@@ -143,8 +145,7 @@ class TgUploader:
                 new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
                 self._up_path = await copy(self._up_path, new_path)
             else:
-            if file_.startswith('www'):
-                file_ = ' '.join(file_.split()[1:])
+        
                 new_path = ospath.join(dirpath, file_)
                 await rename(self._up_path, new_path)
                 self._up_path = new_path
