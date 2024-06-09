@@ -129,13 +129,23 @@ class TgUploader:
         return True
 
     async def _prepare_file(self, file_, dirpath, delete_file):
-        if file_.startswith('www'):
-            file_ = ' '.join(file_.split()[1:])
-            cap_mono = f"{self._lprefix} {file_}"
-            self._lprefix = re_sub(r'www\S+', '', self._lprefix)
-            new_path = ospath.join(dirpath, file_)
-            osrename(up_path, new_path)
-            up_path = new_path
+        if self._lprefix:
+            cap_mono = f"{self._lprefix} <code>{file_}</code>"
+            self._lprefix = re_sub(r'www\S+', '', file_)
+            if (
+                self._listener.seed
+                and not self._listener.newDir
+                and not dirpath.endswith("/splited_files_mltb")
+                and not delete_file
+            ):
+                dirpath = f"{dirpath}/copied_mltb"
+                await makedirs(dirpath, exist_ok=True)
+                new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
+                self._up_path = await copy(self._up_path, new_path)
+            else:
+                new_path = ospath.join(dirpath, f"{self._lprefix} {file_}")
+                await rename(self._up_path, new_path)
+                self._up_path = new_path
         else:
             cap_mono = f"<code>{file_}</code>"
         if len(file_) > 60:
